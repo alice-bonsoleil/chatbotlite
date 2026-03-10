@@ -204,6 +204,46 @@ body {
 .input-area button:hover { opacity: 0.85; }
 .input-area button:disabled { opacity: 0.4; cursor: not-allowed; }
 
+/* マイクボタン */
+.mic-btn {
+  display: none; /* PC では非表示 */
+  width: 44px;
+  height: 44px;
+  border-radius: 50% !important;
+  padding: 0 !important;
+  font-size: 1.2rem !important;
+  flex-shrink: 0;
+  background: #1a1a2a !important;
+  border: 1px solid #3a2a5a !important;
+}
+.mic-btn.listening {
+  background: #3a0d0d !important;
+  border-color: #e53935 !important;
+  animation: mic-pulse 1s infinite;
+}
+@keyframes mic-pulse {
+  0%, 100% { box-shadow: 0 0 0 0 rgba(229,57,53,0.4); }
+  50% { box-shadow: 0 0 0 10px rgba(229,57,53,0); }
+}
+
+@media (max-width: 600px) {
+  .mic-btn { display: flex; align-items: center; justify-content: center; }
+  /* スマホではtextareaを初期非表示、フォーカス時に展開 */
+  .input-area textarea {
+    max-width: 0;
+    padding: 0;
+    border: none;
+    overflow: hidden;
+    transition: max-width 0.3s, padding 0.3s;
+  }
+  .input-area textarea.expanded {
+    max-width: 100%;
+    flex: 1;
+    padding: 10px 14px;
+    border: 1px solid #3a2a5a;
+  }
+}
+
 .welcome {
   flex: 1;
   display: flex;

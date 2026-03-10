@@ -682,3 +682,75 @@ async function sendMessage() {
     userInput.focus();
   }
 }
+
+// ===== 音声入力（スマホ向け） =====
+const micBtn = document.getElementById('micBtn');
+const userInput = document.getElementById('userInput');
+
+if ('SpeechRecognition' in window || 'webkitSpeechRecognition' in window) {
+  const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+  const recognition = new SpeechRecognition();
+  recognition.lang = 'ja-JP';
+  recognition.continuous = false;
+  recognition.interimResults = true;
+
+  let listening = false;
+  let savedText = '';
+
+  micBtn.addEventListener('click', () => {
+    if (listening) {
+      recognition.stop();
+    } else {
+      savedText = userInput.value;
+      recognition.start();
+    }
+  });
+
+  recognition.onstart = () => {
+    listening = true;
+    micBtn.classList.add('listening');
+    micBtn.textContent = '⏹';
+    // textareaを縮めてマイクに集中
+    userInput.classList.remove('expanded');
+  };
+
+  recognition.onresult = (e) => {
+    let interim = '';
+    let finals = savedText;
+    for (let i = 0; i < e.results.length; i++) {
+      if (e.results[i].isFinal) finals += e.results[i][0].transcript;
+      else interim += e.results[i][0].transcript;
+    }
+    userInput.value = finals + interim;
+  };
+
+  recognition.onend = () => {
+    listening = false;
+    micBtn.classList.remove('listening');
+    micBtn.textContent = '🎤';
+    savedText = userInput.value;
+    // 認識結果があれば自動送信
+    if (savedText.trim()) {
+      // textareaを一瞬見せてから送信
+      userInput.classList.add('expanded');
+      setTimeout(() => {
+        sendBtn.click();
+        userInput.classList.remove('expanded');
+      }, 500);
+    }
+  };
+
+  recognition.onerror = (e) => {
+    listening = false;
+    micBtn.classList.remove('listening');
+    micBtn.textContent = '🎤';
+  };
+
+  // textareaタップで展開（スマホ）
+  userInput.addEventListener('focus', () => {
+    userInput.classList.add('expanded');
+  });
+
+} else {
+  micBtn.style.display = 'none';
+}
