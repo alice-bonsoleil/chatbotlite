@@ -889,8 +889,6 @@ if ("SpeechRecognition" in window || "webkitSpeechRecognition" in window) {
   recognition.continuous = true;
   recognition.interimResults = true;
 
-  let _pendingRestart = false;
-
   micBtn.addEventListener("click", () => {
     if (micListening) {
       recognition.stop();
@@ -928,15 +926,9 @@ if ("SpeechRecognition" in window || "webkitSpeechRecognition" in window) {
     micBtn.classList.remove("listening");
     micHasInterim = false;
     sendBtn.disabled = false;
-    if (_pendingRestart) {
-      _pendingRestart = false;
-      savedText = userInput.value;
-      micResultOffset = 0;
-      setTimeout(() => recognition.start(), 300);
-    } else {
-      savedText = userInput.value;
-      updatePreview(savedText, false);
-    }
+    clearBtn.disabled = false;
+    savedText = userInput.value;
+    updatePreview(savedText, false);
   };
 
   recognition.onerror = (e) => {
@@ -950,11 +942,9 @@ if ("SpeechRecognition" in window || "webkitSpeechRecognition" in window) {
     micResultOffset = micRecognition._lastResultIndex || 0;
     micHasInterim = false;
     sendBtn.disabled = false;
+    clearBtn.disabled = false;
     updatePreview("");
-    if (micListening) {
-      _pendingRestart = true;
-      recognition.stop();
-    }
+    // マイクは止めない（stop/startするとスマホで権限確認が出るため）
   });
 } else {
   micBtn.style.display = "none";
