@@ -715,6 +715,8 @@ async function sendMessage() {
   if (!text || isLoading) return;
 
   userInput.value = "";
+  savedText = "";
+  updatePreview("");
   userInput.dispatchEvent(new Event("input"));
   userInput.style.height = "auto";
   isLoading = true;
