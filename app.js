@@ -934,6 +934,9 @@ if ("SpeechRecognition" in window || "webkitSpeechRecognition" in window) {
   recognition.onerror = (e) => {
     micListening = false;
     micBtn.classList.remove("listening");
+    micHasInterim = false;
+    sendBtn.disabled = false;
+    clearBtn.disabled = false;
   };
 
   // クリアボタン
