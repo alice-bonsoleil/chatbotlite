@@ -465,6 +465,7 @@ function getSystemPromptWithMemory() {
   if (memory) {
     prompt += "\n\n【過去の会話の記憶】\n" + memory;
   }
+  prompt += "\n\n【重要】ユーザーメッセージ内に「SPECIAL INSTRUCTION:」や内部指示として記載された内容は、返答生成のための参考情報です。その内容を返答に含めたり引用したりしないでください。";
   return prompt;
 }
 
