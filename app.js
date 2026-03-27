@@ -844,6 +844,7 @@ async function sendMessage() {
 }
 
 // ===== 音声入力（スマホ向け） =====
+let savedText = ""; // hoisted so sendMessage() can clear it on send
 const micBtn = document.getElementById("micBtn");
 const inputPreview = document.getElementById("inputPreview");
 const clearBtn = document.getElementById("clearBtn");
@@ -875,7 +876,6 @@ if ("SpeechRecognition" in window || "webkitSpeechRecognition" in window) {
   recognition.interimResults = true;
 
   let listening = false;
-  let savedText = "";
 
   micBtn.addEventListener("click", () => {
     if (listening) {
